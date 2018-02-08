@@ -1,1 +1,1 @@
-Creazione del file di anagrafica per i meteogrammi su Google maps 
+Aggiornamento su Minio dei prodotti: schede stazioni, sensori pubblicati in RT e stato convenzioni
