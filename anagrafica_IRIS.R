@@ -29,7 +29,7 @@ if (inherits(conn,"try-error")) {
 }
 
 # preparazione query
-query= paste('select A_Stazioni.IDstazione as idstazione, IDrete as idrete, ProprietaStazione as proprieta, Provincia as provincia, Comune as comune, Attributo as attributo, truncate(Y(A_Sensori.CoordUTM),0) as utm_nord, truncate(X(A_Sensori.CoordUTM),0) as utm_est, QuotaSensore as quota, A_Sensori.IDsensore as idsensore, NOMEtipologia as nometipologia,(IFNULL(QSedificio, 0) + IFNULL(QSsupporto,0)) as altezza , AggregazioneTemporale as frequenza, Fiume as fiume, Bacino as bacino,NULL as the_geom, A_Sensori.DataInizio as datainizio, A_Sensori.DataFine as datafine, Storico as storico, NULL as codice_im,CASE WHEN A_Sensori.IDsensore not in (select IDsensore from A_ListaNera where DataFine is NULL) THEN "N" ELSE "S" END AS listanera from  A_Stazioni, A_Sensori, A_Sensori2Destinazione where  A_Stazioni.IDstazione=A_Sensori.IDstazione and  A_Sensori.IDsensore=A_Sensori2Destinazione.IDsensore and A_Sensori2Destinazione.Destinazione=14 and A_Sensori2Destinazione.Datafine is NULL;',sep="")
+query= paste('select A_Stazioni.IDstazione as idstazione, IDrete as idrete, ProprietaStazione as proprieta, Provincia as provincia, Comune as comune, Attributo as attributo, truncate(Y(A_Sensori.CoordUTM),0) as utm_nord, truncate(X(A_Sensori.CoordUTM),0) as utm_est, QuotaSensore as quota, A_Sensori.IDsensore as idsensore, NOMEtipologia as nometipologia,(IFNULL(QSedificio, 0) + IFNULL(QSsupporto,0)) as altezza , AggregazioneTemporale as frequenza, Fiume as fiume, Bacino as bacino,NULL as the_geom, A_Sensori.DataInizio as datainizio, A_Sensori.DataFine as datafine, Storico as storico, NULL as codice_im,CASE WHEN A_Sensori.IDsensore not in (select IDsensore from A_ListaNera where DataFine is NULL) THEN "N" ELSE "S" END AS listanera, CASE WHEN A_Sensori.IDsensore not in (select IDsensore from A_Sensori2Destinazione where Destinazione=13 and DataFine is NULL) THEN "N" ELSE "S" END AS formweb from A_Stazioni, A_Sensori, A_Sensori2Destinazione where  A_Stazioni.IDstazione=A_Sensori.IDstazione and  A_Sensori.IDsensore=A_Sensori2Destinazione.IDsensore and A_Sensori2Destinazione.Destinazione=14 and A_Sensori2Destinazione.Datafine is NULL;',sep="")
 #
 #--------------------------------------------------------------------------------------------
 # stessa query più leggibile (nota:rinomina campi minuscoli perchè postgres non accetta maiuscole)
@@ -58,7 +58,11 @@ query= paste('select A_Stazioni.IDstazione as idstazione, IDrete as idrete, Prop
 #   CASE 
 #    WHEN A_Sensori.IDsensore not in (select IDsensore from A_ListaNera where DataFine is NULL) 
 #    THEN "N" ELSE "S" 
-#   END AS listanera 
+#   END AS listanera,
+#   CASE 
+#    WHEN A_Sensori.IDsensore not in (select IDsensore from A_Sensori2Destinazione where Destinazione=13 and DataFine is NULL) 
+#    THEN "N" ELSE "S" 
+#   END AS formweb
 #
 # from  
 #  A_Stazioni, 
