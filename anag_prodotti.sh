@@ -61,8 +61,8 @@ if [ "$STATO" -eq 1 ] # se si sono verificate anomalie esci
 then
   exit 1
 else # caricamento su MINIO 
-putS3 . $FILE_CONV_TXT prodotti/ anagrafica 
-putS3 . $FILE_CONV_PNG prodotti/ anagrafica 
+putS3 . $FILE_CONV_TXT rete-monitoraggio/ anagrafica 
+putS3 . $FILE_CONV_PNG rete-monitoraggio/ anagrafica 
 
 # controllo sul caricamento su MINIO 
 if [ $? -ne 0 ]
@@ -86,8 +86,8 @@ if [ "$STATO" -eq 1 ] # se si sono verificate anomalie esci
 then
   exit 1
 else # caricamento su MINIO
-putS3 . $FILE_RT prodotti/ anagrafica
-putS3 . $FILE_B prodotti/ anagrafica
+putS3 . $FILE_RT rete-monitoraggio/ anagrafica
+putS3 . $FILE_B rete-monitoraggio/ anagrafica
 
 # controllo sul caricamento su MINIO
 if [ $? -ne 0 ]
@@ -115,7 +115,7 @@ else # caricamento su MINIO
 #NUMERO_SCHEDE=`ls *_main.html | wc -l`
 for x in *_main.html
 do
-  putS3 . $x prodotti/schedestazioni/ anagrafica
+  putS3 . $x rete-monitoraggio/ anagrafica
   rm -f $x
 done
 
