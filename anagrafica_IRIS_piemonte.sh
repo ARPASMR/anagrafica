@@ -11,7 +11,7 @@
 # 2018/01/05 MR
 #=============================================================================
 numsec=864000   # 60 * 60 * 24 * 10 -> 10gg
-ERRE=/usr/bin/R
+ERRE=/usr/bin/Rscript
 CODICE_R='anagrafica_IRIS_piemonte.R'
 FILE_ANAGRAFICA='anag'
 FTP=/usr/bin/ncftpput
@@ -27,7 +27,7 @@ do
 if [ $SECONDS -ge $numsec ]
 then
 # genero anagrafica
-$ERRE --vanilla $FILE_ANAGRAFICA < $CODICE_R
+$ERRE $CODICE_R $FILE_ANAGRAFICA
 # verifico se è andato a buon fine
 STATO=$?
 echo "STATO USCITA DA "$ $CODICE_R" ====> "$STATO
