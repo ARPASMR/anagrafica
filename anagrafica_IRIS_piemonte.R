@@ -15,7 +15,8 @@ options(show.error.messages=TRUE,error=neverstop)
 
 # Leggi riga di comando
 arguments <- commandArgs()
-file_output<-arguments[3]
+file_output<-arguments[6]
+print(arguments)
 
 # connessione al DB
 drv<-dbDriver("MySQL")
