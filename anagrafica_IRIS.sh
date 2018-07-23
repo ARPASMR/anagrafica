@@ -6,7 +6,7 @@
 #
 # 2018/01/05 MR
 #=============================================================================
-numsec=14400 # 6 ore 
+numsec=14400 # 4 ore 
 
 SECONDS=$numsec
 LOCKFILE='usr/local/src/myscripts/.lock'
