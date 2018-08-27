@@ -54,7 +54,7 @@ then
   exit 1
 else
 # caricamento su MINIO 
-putS3 . $FILE_ANAGRAFICA xml/ anagrafica 
+putS3 . $FILE_ANAGRAFICA xml/ rete-monitoraggio
 
 # controllo sul caricamento su MINIO 
 if [ $? -ne 0 ]
