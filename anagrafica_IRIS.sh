@@ -7,13 +7,15 @@
 # 2018/01/05 MR
 # 
 #=============================================================================
-numsec=14400 # 4 ore 
-
-
-LOCKFILE='usr/local/src/myscripts/.lock'
-
+numsec=3600 # 1 ore 
+/usr/bin/Rscript anagrafica_IRIS.R
+sleep $numsec
 while [ 1 ]
 do
- /usr/bin/Rscript anagrafica_IRIS.R
- sleep $numsec
+  if [ $SECONDS -ge $numsec ]
+  then
+    /usr/bin/Rscript anagrafica_IRIS.R
+    SECONDS=0
+    sleep $numsec
+  fi
 done
