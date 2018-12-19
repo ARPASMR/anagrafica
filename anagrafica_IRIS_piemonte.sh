@@ -52,6 +52,7 @@ fi
 #
 SECONDS=0
 rm -f $FILE_ANAGRAFICA_CON_DATA
+sleep $numsec
 #
 fi
 done
