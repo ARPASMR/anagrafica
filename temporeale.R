@@ -22,7 +22,7 @@ fileout_b <- arguments[4]
 
 # [] COLLEGAMENTO AL DB
 drv<-dbDriver("MySQL")
-conn<-try(dbConnect(drv, user="guardone", password=as.character(Sys.getenv("MYSQL_PWD")), dbname="METEO", host="10.10.0.6"))
+conn<-try(dbConnect(drv, user="guardone", password=as.character(Sys.getenv("MYSQL_PWD")), dbname="METEO", host="10.10.0.19"))
 #
 #### sensori pubblicati
 query_richiestaT<-"select Provincia, A_Sensori.IDsensore , CONCAT(Comune,' ',IFNULL(Attributo,'')) as Nome , NOMEtipologia from A_Sensori, A_Sensori2Destinazione, A_Stazioni where A_Sensori.IDstazione =A_Stazioni.IDstazione and A_Sensori.IDsensore =A_Sensori2Destinazione.IDsensore and Destinazione =3 and A_Sensori2Destinazione.DataFine is NULL order by Provincia, Nome, NOMEtipologia;"
