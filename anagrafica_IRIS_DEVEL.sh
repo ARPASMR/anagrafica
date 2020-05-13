@@ -7,7 +7,7 @@
 # 2020/05/12 SGR
 # 
 #==================================================================================================================
-numsec=24*3600 # 1volta al giorno
+numsec=86400 # 1volta al giorno 24*3600
 /usr/bin/Rscript anagrafica_IRIS_DEVEL.R
 sleep $numsec
 while [ 1 ]
