@@ -7,7 +7,7 @@
 
 library(DBI)
 library(RMySQL)
-library(RPostgreSQL)
+library(RPostgreSQL, warn.conflicts = FALSE)
 
 # funzione per gestire eventuali errori
 neverstop<-function(){
