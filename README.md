@@ -4,3 +4,8 @@ Codice per la creazione di un immagine di un container Docker che si occupa di e
 Specificare le variabili d'ambiente:
 - MYSQL_PWD
 - PSQL_PWD
+
+Il comando che esegue lo script che si occupa di aggiornare la tabella del DB di IRIS è già inserito nel Dockerfile!:
+CMD ["./anagrafica_IRIS_DEVEL.sh"]
+
+Volendo si potrebbe non scriverlo nel Dockerfile ma specificarlo all'avvio del container?
