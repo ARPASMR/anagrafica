@@ -18,7 +18,7 @@ options(show.error.messages=TRUE,error=neverstop)
 
 # connessione al DB
 drv<-dbDriver("MySQL")
-conn<-try(dbConnect(drv, user="guardone", password=as.character(Sys.getenv("MYSQL_PWD")), dbname="METEO", host="10.10.0.15"))
+conn<-try(dbConnect(drv, user="guardone", password=as.character(Sys.getenv("MYSQL_PWD")), dbname="METEO", host=as.character(Sys.getenv("DBMETEO_IP"))))
 
 if (inherits(conn,"try-error")) {
   print( "ERRORE nell'apertura della connessione al DBmeteo \n")
