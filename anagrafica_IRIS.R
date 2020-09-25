@@ -29,52 +29,127 @@ if (inherits(conn,"try-error")) {
 }
 
 # preparazione query
-query= paste('select A_Stazioni.IDstazione as idstazione, IDrete as idrete, ProprietaStazione as proprieta, Provincia as provincia, Comune as comune, Attributo as attributo, truncate(Y(A_Sensori.CoordUTM),0) as utm_nord, truncate(X(A_Sensori.CoordUTM),0) as utm_est, QuotaSensore as quota, A_Sensori.IDsensore as idsensore, NOMEtipologia as nometipologia,(IFNULL(QSedificio, 0) + IFNULL(QSsupporto,0)) as altezza , AggregazioneTemporale as frequenza, Fiume as fiume, Bacino as bacino,NULL as the_geom, A_Sensori.DataInizio as datainizio, A_Sensori.DataFine as datafine, Storico as storico, NULL as codice_im,CASE WHEN A_Sensori.IDsensore not in (select IDsensore from A_ListaNera where DataFine is NULL) THEN "N" ELSE "S" END AS listanera, CASE WHEN A_Sensori.IDsensore not in (select IDsensore from A_Sensori2Destinazione where Destinazione=13 and DataFine is NULL) THEN "N" ELSE "S" END AS formweb from A_Stazioni, A_Sensori, A_Sensori2Destinazione where  A_Stazioni.IDstazione=A_Sensori.IDstazione and  A_Sensori.IDsensore=A_Sensori2Destinazione.IDsensore and A_Sensori2Destinazione.Destinazione=14 and A_Sensori2Destinazione.Datafine is NULL;',sep="")
+query= paste('SELECT A_Stazioni.IDstazione AS idstazione, IDrete AS idrete, ProprietaStazione AS proprieta, Provincia AS provincia, Comune AS comune, Attributo AS attributo, Truncate(Y(A_Sensori.CoordUTM),0) AS utm_nord, Truncate(X(A_Sensori.CoordUTM),0) AS utm_est, QuotaSensore AS quota, A_Sensori.IDsensore AS idsensore, NOMEtipologia AS nometipologia, (Ifnull(QSedificio,0) + Ifnull(QSsupporto,0)) AS altezza, AggregazioneTemporale AS frequenza, Fiume AS fiume, Bacino AS bacino, NULL AS the_geom, A_Sensori.DataInizio AS datainizio, A_Sensori.DataFine AS datafine, Storico AS storico, NULL AS codice_im, CASE WHEN A_Sensori.IDsensore NOT IN ( SELECT IDsensore FROM A_ListaNera WHERE DataFine IS NULL ) THEN "N" ELSE "S" END AS listanera, CASE WHEN A_Sensori.IDsensore NOT IN ( SELECT IDsensore FROM A_Sensori2Destinazione WHERE Destinazione = 13 AND DataFine IS NULL ) THEN "N" ELSE "S" END AS formweb, CASE WHEN A_Sensori.IDsensore IN ( SELECT IDsensore FROM A_Sensori_specifiche WHERE RiscVent = "NO" ) THEN "NO" WHEN A_Sensori.IDsensore IN ( SELECT IDsensore FROM A_Sensori_specifiche WHERE RiscVent = "yes" AND DataDisistallazione IS NULL ) AND A_Sensori.IDstazione IN ( SELECT A_Stazioni.IDstazione FROM A_Stazioni, A_Sensori WHERE A_Stazioni.IDstazione=A_Sensori.IDstazione AND NOMEtipologia = "RIS" AND IDsensore IN ( SELECT IDsensore FROM A_ListaNera WHERE DataFine IS NULL ) ) THEN "N" WHEN A_Sensori.IDsensore IN ( SELECT IDsensore FROM A_Sensori_specifiche WHERE RiscVent = "yes" AND DataDisistallazione IS NULL ) AND A_Sensori.IDstazione NOT IN ( SELECT A_Stazioni.IDstazione FROM A_Stazioni, A_Sensori WHERE A_Stazioni.IDstazione=A_Sensori.IDstazione AND NOMEtipologia = "RIS" AND IDsensore IN ( SELECT IDsensore FROM A_ListaNera WHERE DataFine IS NULL ) ) THEN "S" WHEN A_Sensori.IDsensore IN ( SELECT IDsensore FROM A_Sensori_specifiche WHERE RiscVent = "yes" AND DataDisistallazione IS NOT NULL ) THEN "NO" END AS risc FROM A_Stazioni, A_Sensori, A_Sensori2Destinazione WHERE A_Stazioni.IDstazione = A_Sensori.IDstazione AND A_Sensori.IDsensore = A_Sensori2Destinazione.IDsensore AND A_Sensori2Destinazione.Destinazione = 14 AND A_Sensori2Destinazione.DataFine IS NULL;',sep="")
 #
 #--------------------------------------------------------------------------------------------
-# stessa query più leggibile (nota:rinomina campi minuscoli perchè postgres non accetta maiuscole)
+# stessa query più leggibile (nota: rinomina i nomi dei campi in output minuscoli perchè postgres non accetta maiuscole)
 #
-# select 
-#   A_Stazioni.IDstazione as idstazione, 
-#   IDrete as idrete, 
-#   ProprietaStazione as proprieta, 
-#   Provincia as provincia, 
-#   Comune as comune, 
-#   Attributo as attributo, 
-#   truncate(Y(A_Sensori.CoordUTM),0) as utm_nord, 
-#   truncate(X(A_Sensori.CoordUTM),0) as utm_est, 
-#   QuotaSensore as quota, 
-#   A_Sensori.IDsensore as idsensore, 
-#   NOMEtipologia as nometipologia,
-#   (IFNULL(QSedificio, 0) + IFNULL(QSsupporto,0)) as altezza , 
-#   AggregazioneTemporale as frequenza, 
-#   Fiume as fiume, 
-#   Bacino as bacino,
-#   NULL as the_geom, 
-#   A_Sensori.DataInizio as datainizio, 
-#   A_Sensori.DataFine as datafine, 
-#   Storico as storico, 
-#   NULL as codice_im,
-#   CASE 
-#    WHEN A_Sensori.IDsensore not in (select IDsensore from A_ListaNera where DataFine is NULL) 
-#    THEN "N" ELSE "S" 
-#   END AS listanera,
-#   CASE 
-#    WHEN A_Sensori.IDsensore not in (select IDsensore from A_Sensori2Destinazione where Destinazione=13 and DataFine is NULL) 
-#    THEN "N" ELSE "S" 
-#   END AS formweb
-#
-# from  
-#  A_Stazioni, 
-#  A_Sensori, 
-#  A_Sensori2Destinazione 
-#
-# where 
-#  A_Stazioni.IDstazione=A_Sensori.IDstazione and A_Sensori.IDsensore=A_Sensori2Destinazione.IDsensore 
-# and 
-#  A_Sensori2Destinazione.Destinazione=14 
-# and 
-#  A_Sensori2Destinazione.Datafine is NULL;
+# SELECT A_Stazioni.IDstazione AS idstazione,  
+  # IDrete AS idrete,  
+  # ProprietaStazione AS proprieta,  
+  # Provincia AS provincia,  
+  # Comune AS comune,  
+  # Attributo AS attributo,  
+  # Truncate(Y(A_Sensori.CoordUTM),0) AS utm_nord,  
+  # Truncate(X(A_Sensori.CoordUTM),0) AS utm_est,  
+  # QuotaSensore AS quota,  
+  # A_Sensori.IDsensore AS idsensore,  
+  # NOMEtipologia AS nometipologia,  
+  # (Ifnull(QSedificio,0) + Ifnull(QSsupporto,0)) AS altezza,
+  # AggregazioneTemporale AS frequenza,
+  # Fiume AS fiume, 
+  # Bacino AS bacino, 
+  # NULL  AS the_geom, 
+  # A_Sensori.DataInizio AS datainizio,
+  # A_Sensori.DataFine AS datafine,
+  # Storico AS storico,
+  # NULL AS codice_im,
+
+# /* Aggiunta del campo "listanera": S/N */
+  # CASE
+    # WHEN A_Sensori.IDsensore NOT IN
+       # (
+       # SELECT IDsensore
+       # FROM A_ListaNera
+       # WHERE DataFine IS NULL
+       # )
+    # THEN "N"
+    # ELSE "S"
+  # END
+  # AS listanera,
+
+# /* Aggiunta del campo "formweb": S/N */
+  # CASE
+    # WHEN A_Sensori.IDsensore NOT IN
+     # (
+      # SELECT IDsensore
+      # FROM A_Sensori2Destinazione
+      # WHERE Destinazione = 13 AND DataFine IS NULL
+      # )
+    # THEN "N"
+    # ELSE "S"
+  # END
+  # AS formweb,
+
+# /* Aggiunta del campo "risc": NO, S/N, NULL */ 
+  # CASE
+    # WHEN A_Sensori.IDsensore IN 
+		# (
+		# SELECT IDsensore
+		# FROM A_Sensori_specifiche
+		# WHERE RiscVent = "NO"
+		# )
+	# THEN "NO"
+	
+    # WHEN A_Sensori.IDsensore IN 
+		# (
+		# SELECT IDsensore
+		# FROM A_Sensori_specifiche
+		# WHERE RiscVent = "yes" AND DataDisistallazione IS NULL
+		# )
+        # AND A_Sensori.IDstazione IN 
+			# (
+			# SELECT A_Stazioni.IDstazione
+            # FROM A_Stazioni, A_Sensori
+            # WHERE A_Stazioni.IDstazione=A_Sensori.IDstazione
+            # AND NOMEtipologia = "RIS"
+            # AND IDsensore IN 
+				# (
+				# SELECT IDsensore
+				# FROM A_ListaNera
+				# WHERE DataFine IS NULL
+				# )
+			# )
+	# THEN "N"
+	
+    # WHEN A_Sensori.IDsensore IN 
+		# (
+		# SELECT IDsensore
+		# FROM A_Sensori_specifiche
+		# WHERE RiscVent = "yes" AND DataDisistallazione IS NULL
+		# )
+        # AND A_Sensori.IDstazione NOT IN 
+			# (
+			# SELECT A_Stazioni.IDstazione
+            # FROM A_Stazioni, A_Sensori
+            # WHERE A_Stazioni.IDstazione=A_Sensori.IDstazione
+            # AND NOMEtipologia = "RIS"
+            # AND IDsensore IN 
+				# (
+				# SELECT IDsensore
+				# FROM A_ListaNera
+				# WHERE DataFine IS NULL
+				# )
+			# )
+	# THEN "S"
+
+    # WHEN A_Sensori.IDsensore IN 
+		# (
+		# SELECT IDsensore
+		# FROM A_Sensori_specifiche
+		# WHERE RiscVent = "yes" AND DataDisistallazione IS NOT NULL
+		# )
+	# THEN "NO"
+	
+  # END
+  # AS risc
+ 
+# FROM A_Stazioni, A_Sensori, A_Sensori2Destinazione  
+# WHERE 
+  # A_Stazioni.IDstazione = A_Sensori.IDstazione  
+  # AND A_Sensori.IDsensore = A_Sensori2Destinazione.IDsensore  
+  # AND A_Sensori2Destinazione.Destinazione = 14  
+  # AND A_Sensori2Destinazione.DataFine IS NULL;  
 #--------------------------------------------------------------------------------------------
 
 # esecuzione query
