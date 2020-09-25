@@ -3,11 +3,12 @@
 #  nella tabella anagraficasensori del DB postgres di IRIS         #
 #                                                                  #
 #  2018/01/05 MR                                                   #
+#  2020/09/25 SGR - Modifica per aggiunta campo "risc"             #
 #==================================================================#
-#
+
 library(DBI)
 library(RMySQL)
-library(RPostgreSQL)
+library(RPostgreSQL, warn.conflicts = FALSE)
 
 # funzione per gestire eventuali errori
 neverstop<-function(){
@@ -18,7 +19,7 @@ options(show.error.messages=TRUE,error=neverstop)
 
 # connessione al DB
 drv<-dbDriver("MySQL")
-conn<-try(dbConnect(drv, user="guardone", password=as.character(Sys.getenv("MYSQL_PWD")), dbname="METEO", host="10.10.0.15"))
+conn<-try(dbConnect(drv, user="guardone", password=as.character(Sys.getenv("MYSQL_PWD")), dbname="METEO", host="10.10.0.6"))
 
 if (inherits(conn,"try-error")) {
   print( "ERRORE nell'apertura della connessione al DBmeteo \n")
