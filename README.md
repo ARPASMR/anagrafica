@@ -4,7 +4,9 @@ Codice per la creazione di un immagine di un container Docker che si occupa di e
 Specificare le variabili d'ambiente:
 - MYSQL_PWD
 - PSQL_PWD
-- DBMETEO_IP=10.10.0.6
+
+
+NB. L'IP del DB METEO è specificato all'interno dello script anagrafica_IRIS_new.R (10.10.0.6). Magari si potrebbe esportare come variabile d'ambiente da passare all'avvio del container? Es. DBMETEO_IP
 
 Il comando che esegue lo script che si occupa di aggiornare la tabella del DB di IRIS è già inserito nel Dockerfile:
-CMD ["./anagrafica_IRIS_new.sh"]
+CMD ["./anagrafica_IRIS.sh"]
