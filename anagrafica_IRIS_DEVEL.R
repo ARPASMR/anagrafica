@@ -2,7 +2,7 @@
 #  estrae le info di anagrafica per IRIS (versione di sviluppo/devel) dal DB meteo   #
 #  e le importa nella tabella "anagraficasensori" del DB postgres di IRIS_DEVEL      #
 #                                                                                    #
-#  2020/05/12 SGR                                                                    #
+#  2020/12/14 SGR                                                                    #
 #====================================================================================#
 
 library(DBI)
