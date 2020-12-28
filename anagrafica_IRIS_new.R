@@ -4,6 +4,7 @@
 #                                                                  #
 #  2018/01/05 MR                                                   #
 #  2020/09/25 SGR - Modifica per aggiunta campo "risc"             #
+#  2020/12/14 SGR - Aggiornamento per campo "risc"             #
 #==================================================================#
 
 library(DBI)
