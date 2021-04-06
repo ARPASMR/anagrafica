@@ -1,11 +1,12 @@
-#==================================================================#
-#  estrae le info di anagrafica per IRIS dal DBmeteo e le importa  # 
-#  nella tabella anagraficasensori del DB postgres di IRIS         #
-#                                                                  #
-#  2018/01/05 MR                                                   #
-#  2020/09/25 SGR - Modifica per aggiunta campo "risc"             #
-#  2020/12/28 SGR - Aggiornamento per campo "risc"             #
-#==================================================================#
+#==========================================================================#
+#  estrae le info di anagrafica per IRIS dal DBmeteo e le importa          # 
+#  nella tabella anagraficasensori del DB postgres di IRIS                 #
+#                                                                          #
+#  2018/01/05 MR                                                           #
+#  2020/09/25 SGR - Modifica per aggiunta campo "risc"                     #
+#  2020/12/28 SGR - Aggiornamento per campo "risc"                         #
+#  2021/04/06 AV+MR  - Aggiornamento per adeguamento a nuove zone omogenee #
+#==========================================================================#
 
 library(DBI)
 library(RMySQL)
@@ -208,8 +209,9 @@ if (inherits(inserimento,"try-error")) {
   quit(status=1)
 }
 
-# popolamento campi geometrici 
-query_update<-paste("UPDATE dati_di_base.anagraficasensori SET the_geom = ST_SetSRID(ST_MakePoint(utm_est, utm_nord), 32632); UPDATE dati_di_base.anagraficasensori SET codice_im = foo.codice_im FROM (SELECT b.codice_im, a.idsensore FROM dati_di_base.anagraficasensori a, dati_di_base.aree_allerta b WHERE st_intersects(a.the_geom, b.the_geom)) AS foo WHERE anagraficasensori.idsensore = foo.idsensore")
+# popolamento campi geometrici e calcolo assegnazione stazioni-zone omogenee IM
+#query_update<-paste("UPDATE dati_di_base.anagraficasensori SET the_geom = ST_SetSRID(ST_MakePoint(utm_est, utm_nord), 32632); UPDATE dati_di_base.anagraficasensori SET codice_im = foo.codice_im FROM (SELECT b.codice_im, a.idsensore FROM dati_di_base.anagraficasensori a, dati_di_base.aree_allerta b WHERE st_intersects(a.the_geom, b.the_geom)) AS foo WHERE anagraficasensori.idsensore = foo.idsensore")
+query_update<-paste("UPDATE dati_di_base.anagraficasensori SET the_geom = ST_SetSRID(ST_MakePoint(utm_est, utm_nord), 32632); UPDATE dati_di_base.anagraficasensori SET codice_im = foo.ds_zona FROM (SELECT b.ds_zona, a.idsensore FROM dati_di_base.anagraficasensori a, dati_di_base.zone_omogenee_rischio_im_2021 b WHERE st_intersects(a.the_geom, b.the_geom)) AS foo WHERE anagraficasensori.idsensore = foo.idsensore")
 
 update<-try(dbGetQuery(conn_psql,query_update), silent=TRUE)
 if (inherits(update,"try-error")) {
