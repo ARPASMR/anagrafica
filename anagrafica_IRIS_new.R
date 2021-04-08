@@ -177,8 +177,14 @@ dbUnloadDriver(drv)
 
 
 ###### DB IRIS
+# nome del DB
+DBNAME=as.character(Sys.getenv("PSQL_DB"))
+if (DBNAME==""){
+   DBNAME="iris_base"
+}
+
 drv_psql<-dbDriver("PostgreSQL")
-conn_psql = try(dbConnect(drv_psql, user="postgres", password=as.character(Sys.getenv("PSQL_PWD")), dbname="iris_base", host="10.10.0.19"))
+conn_psql = try(dbConnect(drv_psql, user="postgres", password=as.character(Sys.getenv("PSQL_PWD")), dbname=DBNAME, host="10.10.0.19"))
 if (inherits(conn_psql,"try-error")) {
   print( "ERRORE nell'apertura della connessione al DB IRIS \n")
   dbDisconnect(conn_psql)
