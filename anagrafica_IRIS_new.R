@@ -6,6 +6,7 @@
 #  2020/09/25 SGR - Modifica per aggiunta campo "risc"                     #
 #  2020/12/28 SGR - Aggiornamento per campo "risc"                         #
 #  2021/04/06 AV+MR  - Aggiornamento per adeguamento a nuove zone omogenee #
+#  2021/11/17 MR - Aggiornamento per lettura da nuovo dbmeteo dockerizzato #
 #==========================================================================#
 
 library(DBI)
@@ -21,8 +22,8 @@ options(show.error.messages=TRUE,error=neverstop)
 
 # connessione al DB
 drv<-dbDriver("MySQL")
-conn<-try(dbConnect(drv, user="guardone", password=as.character(Sys.getenv("MYSQL_PWD")), dbname="METEO", host="10.10.0.6"))
-
+conn<-try(dbConnect(drv, user=as.character(Sys.getenv("MYSQL_USR")), password=as.character(Sys.getenv("MYSQL_PWD")), dbname=as.character(Sys.getenv("MYSQL_DBNAME")), host=as.character(Sys.getenv("MYSQL_HOST")),port=as.numeric(Sys.getenv("MYSQL_PORT")) ))
+#
 if (inherits(conn,"try-error")) {
   print( "ERRORE nell'apertura della connessione al DBmeteo \n")
   dbDisconnect(conn)
